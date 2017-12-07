@@ -1063,6 +1063,8 @@ int MemInitialize() // returns -1 if any eror during initialization
 	DiskLoadRom(pCxRomPeripheral, 6);				// $C600 : Disk][ f/w
 	HD_Load_Rom(pCxRomPeripheral, 7);				// $C700 : HDD f/w
 
+        sg_IBXCard.Initialize(pCxRomPeripheral, 3);  // IBX Card in Slot 3
+
 	MemReset();
 	return 0; // all is OK??
 }

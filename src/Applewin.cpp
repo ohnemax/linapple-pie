@@ -117,6 +117,8 @@ CMouseInterface		sg_Mouse;
 
 UINT	g_Slot4 = CT_Mockingboard;	// CT_Mockingboard or CT_MouseInterface
 
+IBXCard sg_IBXCard;
+
 CURL *g_curl = NULL;	// global easy curl resourse
 //===========================================================================
 
