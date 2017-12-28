@@ -73,4 +73,6 @@
 
 //#include "Util_MemoryTextFile.h"
 
+#include "HVCard.h"
 #include "IBXCard.h"
+#include "IBX12Card.h"

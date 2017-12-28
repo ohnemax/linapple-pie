@@ -67,5 +67,6 @@ extern FILE*      g_fh;				// Filehandle for log file
 extern bool       g_bDisableDirectSound;	// Cmd line switch: don't init DS (so no MB support)
 
 extern UINT		g_Slot4;	// Mockingboard or Mouse in slot4
+extern DWORD      dwIBXCard;
 
 void    SetCurrentCLK6502();

@@ -117,7 +117,10 @@ CMouseInterface		sg_Mouse;
 
 UINT	g_Slot4 = CT_Mockingboard;	// CT_Mockingboard or CT_MouseInterface
 
+DWORD	dwIBXCard = 0;
+HVCard sg_HVCard;
 IBXCard sg_IBXCard;
+IBX12Card sg_IBX12Card;
 
 CURL *g_curl = NULL;	// global easy curl resourse
 //===========================================================================
@@ -466,6 +469,9 @@ void LoadConfiguration ()
   DWORD dwSerialPort;
   LOAD(TEXT("Serial Port")       ,&dwSerialPort);
   sg_SSC.SetSerialPort(dwSerialPort); // ----------- why it is here????
+
+  dwIBXCard = 0;
+  LOAD(TEXT("IBX Card")          ,&dwIBXCard);
 
   LOAD(TEXT("Emulation Speed")   ,&g_dwSpeed);
 

@@ -1057,13 +1057,21 @@ int MemInitialize() // returns -1 if any eror during initialization
 //	printf("Apple ROM loaded and registered\n");
 
 	PrintLoadRom(pCxRomPeripheral, 1);				// $C100 : Parallel printer f/w
-	sg_SSC.CommInitialize(pCxRomPeripheral, 2);		// $C200 : SSC
+        //	sg_SSC.CommInitialize(pCxRomPeripheral, 2);		// $C200 : SSC
 	if (g_Slot4 == CT_MouseInterface)
 		sg_Mouse.Initialize(pCxRomPeripheral, 4);	// $C400 : Mouse f/w
 	DiskLoadRom(pCxRomPeripheral, 6);				// $C600 : Disk][ f/w
 	HD_Load_Rom(pCxRomPeripheral, 7);				// $C700 : HDD f/w
 
-        sg_IBXCard.Initialize(pCxRomPeripheral, 3);  // IBX Card in Slot 3
+        sg_HVCard.Initialize(pCxRomPeripheral, 2);  // HV Card in Slot 3
+        if(dwIBXCard == 1) {
+          sg_IBXCard.Initialize(pCxRomPeripheral, 4);  // 8Bit IBX Card in Slot 4
+          printf("This Emulator has a 8 Bit ADC card installed!\n");
+        }
+        if(dwIBXCard == 2) {
+          sg_IBX12Card.Initialize(pCxRomPeripheral, 4);  // 12Bit IBX Card in Slot 4
+          printf("This Emulator has a 12 Bit ADC card installed!\n");
+        }
 
 	MemReset();
 	return 0; // all is OK??

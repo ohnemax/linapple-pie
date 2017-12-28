@@ -47,8 +47,16 @@ BYTE IBXCard::ReadADC() {
 BYTE IBXCard::ReadStatus() {
   printf("Reading Status Value\n");
   statusrequests += 1;
-  if (statusrequests > 2) {
+  // After 10 statusrequsts interrupt will be low
+  if (statusrequests > 10) {
     statusbyte = 1;
+    adctrig = true;
+    statusrequests = 0;
+    return statusbyte;
+  }
+  // After 2 requests there will be new event
+  if (statusrequests > 2) {
+    statusbyte = 3;
     adctrig = true;
     statusrequests = 0;
     return statusbyte;
