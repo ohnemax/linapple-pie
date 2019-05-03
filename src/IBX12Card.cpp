@@ -1,14 +1,25 @@
 #include "stdafx.h"
 
-IBX12Card::IBX12Card() {
+IBX12Card::IBX12Card(double maxvoltage) {
   statusbyte = 0;
   adctrig = false;
   statusrequests = 0;
 
+  double absolutemaxvoltage = 10;
+  float filespectrum[4096];
+
   FILE *f;
-  f = fopen("spectrum.dat", "r");
-  for(int i = 0; i<256; i++) {
-    fscanf(f,"%f",&spectrum[i]);
+  f = fopen("4096-spectrum.dat", "r");
+  for(int i = 0; i<4096; i++) {
+    fscanf(f,"%f",&filespectrum[i]);
+  }
+  double sum = 0;
+  for(int i = 0; i<4096; i++) {
+    spectrum[i] = filespectrum[i];
+    sum += filespectrum[i];
+  }
+  for(int i = 0; i<4096; i++) {
+    spectrum[i] = spectrum[i] / sum;
     if(i > 0) {
       spectrum[i] += spectrum[i-1];
     }
@@ -16,6 +27,7 @@ IBX12Card::IBX12Card() {
   }
   // printf("\n");
   fclose(f);
+  nextvalue = 0;
 }
 
 IBX12Card::~IBX12Card() {
@@ -33,9 +45,12 @@ BYTE IBX12Card::ResetADC() {
   while(spectrum[i] <= no) {
     i++;
   }
-  int offset = int(1.0 * rand() / RAND_MAX * 16);
-  printf("i:%i o:%i\n", i, offset);
-  nextvalue = i * 8 + offset; // it is 12 bit, but the card only uses 11
+  nextvalue = i;
+  // printf("%d\n", i);
+  // nextvalue += 1;
+  // if (nextvalue == 4096) {
+  //   nextvalue = 0;
+  // }
   return 0;
 }
 
@@ -59,24 +74,25 @@ BYTE IBX12Card::ReadADCHighByte() {
 }
 
 BYTE IBX12Card::ReadStatus() {
-  printf("Reading Status Value\n");
   statusrequests += 1;
-  // After 10 statusrequsts interrupt will be low
-  // if (statusrequests > 10) {
-  if (statusrequests > 2) {
+  statusbyte = 0;
+  // After 1 requests there will be new event
+  // if (statusrequests > 1) {
+  if (statusrequests > 1) {
     statusbyte = 1;
     adctrig = true;
+  // After more status requests STS will be on
+  if (statusrequests > 3) {
+    statusbyte = 3;
+  }
+  }
+  // After even more status requests, conversion will be done
+  if (statusrequests > 4) {
+    statusbyte = 1;
     statusrequests = 0;
-    return statusbyte;
   }
-  // After 2 requests there will be new event
-  // if (statusrequests > 2) {
-  if (statusrequests > 1) {
-    statusbyte = 2;
-    adctrig = true;
-    return statusbyte;
-  }
-  return 0;
+  printf("Status Read %d, Value %d\n", statusrequests, statusbyte);
+  return statusbyte;
 }
 
 BYTE IBX12Card::Read(WORD PC, WORD uAddr, BYTE bWrite, BYTE uValue, ULONG nCyclesLeft) {

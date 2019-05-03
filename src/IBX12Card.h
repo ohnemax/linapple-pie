@@ -5,7 +5,7 @@ extern class IBX12Card sg_IBX12Card;
 class IBX12Card
 {
 public:
-  IBX12Card();
+  IBX12Card(double maxvoltage = 2.5);
   virtual ~IBX12Card();
 
   void Initialize(LPBYTE pCxRomPeripheral, UINT uSlot);
@@ -24,6 +24,6 @@ private:
   
   BOOL adctrig;
   UINT statusrequests;
-  float spectrum[256];
+  double spectrum[4096];
   WORD nextvalue;
 };
