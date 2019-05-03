@@ -1,4 +1,4 @@
-+/src/AppleWin
- +/src/linapple
- +*.o
+/src/AppleWin
+/src/linapple
+*.o
 
